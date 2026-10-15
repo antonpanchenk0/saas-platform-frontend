@@ -1,0 +1,26 @@
+# dependencies
+node_modules
+.pnpm-store
+
+# build output
+.next
+out
+build
+dist
+next-env.d.ts
+*.tsbuildinfo
+
+# test artifacts
+coverage
+playwright-report
+test-results
+blob-report
+
+# generated code (never edited by hand)
+src/lib/api/generated
+
+# lockfiles
+pnpm-lock.yaml
+
+# misc
+.vercel
