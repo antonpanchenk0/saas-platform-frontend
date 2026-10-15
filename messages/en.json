@@ -1,0 +1,18 @@
+{
+  "Metadata": {
+    "title": "Tecca",
+    "description": "Tecca SaaS platform"
+  },
+  "HomePage": {
+    "title": "Tecca",
+    "description": "The project foundation is ready."
+  },
+  "LocaleSwitcher": {
+    "label": "Language"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist.",
+    "home": "Back to home"
+  }
+}

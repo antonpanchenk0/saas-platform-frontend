@@ -1,0 +1,18 @@
+{
+  "Metadata": {
+    "title": "Tecca",
+    "description": "SaaS-платформа Tecca"
+  },
+  "HomePage": {
+    "title": "Tecca",
+    "description": "Основу проєкту налаштовано."
+  },
+  "LocaleSwitcher": {
+    "label": "Мова"
+  },
+  "NotFound": {
+    "title": "Сторінку не знайдено",
+    "description": "Сторінки, яку ви шукаєте, не існує.",
+    "home": "На головну"
+  }
+}

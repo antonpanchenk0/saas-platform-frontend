@@ -12,6 +12,7 @@ project foundation only: tooling, a minimal scaffold, and test/CI setup. No prod
 | UI           | shadcn/ui + [ReUI](https://reui.io) (**Base UI** variant, style `base-nova`) |
 | Server state | TanStack Query                                                               |
 | Forms        | React Hook Form + Zod                                                        |
+| i18n         | next-intl (locale-prefixed routes, `en` + `uk`)                              |
 | API          | `openapi-typescript` (types) + `openapi-fetch` (client)                      |
 | Unit tests   | Vitest + React Testing Library (jsdom)                                       |
 | E2E tests    | Playwright (Chromium)                                                        |
@@ -102,7 +103,7 @@ one (`../saas-platform-frontend`), or set `FRONTEND_PATH` in the backend `.env`.
 ### Coverage
 
 `pnpm test:coverage` prints a summary and writes `coverage/` (open `coverage/index.html`; `lcov.info`
-is also produced). Generated code, e2e tests, the root layout and the copy-owned `components/ui` and
+is also produced). Generated code, e2e tests, the root layout, thin framework wiring (routes, proxy, next-intl config) and the copy-owned `components/ui` and
 `components/reui` primitives are excluded.
 
 Thresholds are set in `vitest.config.ts` (`test.coverage.thresholds`): statements 60%, branches 50%,
@@ -175,19 +176,43 @@ pnpm dlx shadcn@latest add @reui/badge     # ReUI component -> src/components/re
 
 ```text
 src/
-  app/                 Next.js routes, layout, global CSS (Tailwind v4)
+  app/[locale]/        Next.js routes and root layout (all routes live under the locale segment)
+  app/globals.css      Global CSS (Tailwind v4)
   components/ui/       shadcn/ui primitives (installed via CLI)
   components/reui/     ReUI components (installed via CLI)
   components/shared/   Reusable, non-feature-specific components
   features/            Product-specific modules (future)
   hooks/               Shared React hooks
+  i18n/                next-intl config (routing, request, locale-aware navigation)
   lib/api/generated/   Generated OpenAPI types (do not edit)
   lib/utils/           Utilities (`cn`)
   providers/           React context providers (TanStack Query)
+messages/              Translation files, one per locale (`en.json` is the source of truth)
 tests/
   unit/  components/  e2e/  setup.ts
 scripts/               Tooling scripts (API type generation)
 ```
+
+## Internationalization (next-intl)
+
+Supported locales are `en` (default) and `uk`. Every URL is prefixed with its locale (`/en/...`,
+`/uk/...`); `src/proxy.ts` redirects other URLs using the locale cookie, then `Accept-Language`.
+
+- Locales and the default are defined in `src/i18n/routing.ts`; the language names shown in the
+  switcher live there too.
+- Translations live in `messages/<locale>.json`. Keys are type-checked against `messages/en.json`, and
+  a unit test fails if any locale is missing keys that the default locale has.
+- Server and client components both use `useTranslations('Namespace')`. In async server code use
+  `getTranslations`.
+- Use `Link`, `redirect`, `usePathname` and `useRouter` from `@/i18n/navigation` instead of the
+  `next/*` versions so the locale is kept. `LocaleSwitcher` (`components/shared`) switches language.
+- Every page and layout under `app/[locale]` should call `setRequestLocale(locale)` to stay statically
+  rendered.
+- Do not hardcode user-facing strings; add them to the message files.
+
+**Adding a language:** add it to `locales` in `src/i18n/routing.ts` and to `localeNames`, create
+`messages/<locale>.json` with the same keys as `en.json`, and add any font subset it needs in
+`src/app/[locale]/layout.tsx` (Ukrainian required `cyrillic`).
 
 ## Environment variables
 

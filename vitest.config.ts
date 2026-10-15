@@ -27,7 +27,13 @@ export default defineConfig({
         'src/components/ui/**',
         'src/components/reui/**',
         // The root layout renders <html>; it is exercised by Playwright, not jsdom.
-        'src/app/layout.tsx',
+        'src/app/[[]locale]/layout.tsx',
+        // Thin framework wiring (routes, proxy, next-intl config); covered by Playwright.
+        'src/app/[[]locale]/**/page.tsx',
+        'src/app/[[]locale]/not-found.tsx',
+        'src/proxy.ts',
+        'src/i18n/request.ts',
+        'src/i18n/navigation.ts',
       ],
       // Deliberately modest starting thresholds. Raise them as the codebase and its tests grow
       // (e.g. +5 points per milestone) and keep them below the current actual coverage.
